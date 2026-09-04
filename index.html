@@ -308,6 +308,129 @@ body {
 .card:nth-child(6) { animation-delay: 0.60s; }
 .card:nth-child(7) { animation-delay: 0.67s; }
 
+
+/* ─── COMMERCIAL / VIDEO WORK ─── */
+.work {
+  border-top: 1px solid var(--divider);
+  padding-top: 48px;
+  margin-top: 28px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.work-title {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+.vcard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  transition: background 0.25s ease;
+}
+.vcard:hover { background: var(--hover); }
+.vcard-body { padding: 16px 20px 18px; }
+.vcard-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.vcard-title {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+.vcard-role {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+.vcard-role strong { color: var(--text); font-weight: 500; }
+
+/* Media frame — fixed ratio so nothing reflows while loading */
+.vframe {
+  position: relative;
+  width: 100%;
+  background: #000;
+  line-height: 0;
+}
+.vframe video,
+.vframe iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: contain;
+  background: #000;
+}
+.ratio-16x9 { aspect-ratio: 16 / 9; }
+.ratio-4x3  { aspect-ratio: 4 / 3; }
+
+/* Two-up row for the supporting pieces */
+.vgrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.vgrid .vcard { margin-bottom: 0; }
+
+/* YouTube click-to-load facade — no third-party JS until the viewer asks */
+.yt-facade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: #000;
+  cursor: pointer;
+  display: block;
+}
+.yt-facade img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: opacity 0.25s ease;
+}
+.yt-facade:hover img,
+.yt-facade:focus-visible img { opacity: 0.92; }
+.yt-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  background: rgba(19,20,20,0.55);
+  border: 1px solid rgba(245,245,245,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.yt-facade:hover .yt-play,
+.yt-facade:focus-visible .yt-play {
+  background: rgba(19,20,20,0.8);
+  border-color: rgba(245,245,245,0.85);
+}
+.yt-play svg { width: 19px; height: 19px; fill: var(--text); margin-left: 3px; }
+
+@media (max-width: 700px) {
+  .vgrid { grid-template-columns: 1fr; gap: 20px; }
+  .work { padding-top: 40px; }
+  .vcard-body { padding: 14px 16px 16px; }
+  .vcard-title { font-size: 17px; }
+  .yt-play { width: 52px; height: 52px; }
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 600px) {
   .hero { padding-top: 48px; }
@@ -341,6 +464,45 @@ const PORTFOLIO_CONFIG = {
   subhead: "Every example below is the same moment — before and after. Toggle A/B mid-playback and the difference is instant.",
   tools: "Logic Pro \u00B7 iZotope RX \u00B7 FabFilter \u00B7 Waves"
 };
+
+
+/* ═══════════════════════════════════════════════════════════════
+   COMMERCIAL / VIDEO WORK — edit titles & credits here.
+   `title: null` renders the card with no project name (honest
+   default when the brand has not been confirmed).
+   ═══════════════════════════════════════════════════════════════ */
+
+const VIDEO_SECTION_TITLE = "Commercial & Video Work";
+
+const VIDEO_FEATURED = {
+  type: "local",
+  src: "assets/commercial-featured.mp4",
+  poster: "assets/commercial-featured-poster.jpg",
+  // Brand confirmed from the closing title card in the film itself.
+  title: "Cadence",
+  role: "Mix & Master",
+  ratio: "4x3"
+};
+
+const VIDEO_SUPPORTING = [
+  {
+    type: "local",
+    src: "assets/commercial-01.mp4",
+    poster: "assets/commercial-01-poster.jpg",
+    // Brand confirmed from on-screen product packaging in the opening frame.
+    title: "Cadence",
+    role: "Production, Mix & Master",
+    ratio: "4x3"
+  },
+  {
+    type: "local",
+    src: "assets/commercial-02.mp4",
+    poster: "assets/commercial-02-poster.jpg",
+    title: null,
+    role: "Production, Mix & Master",
+    ratio: "4x3"
+  }
+];
 
 const PORTFOLIO_ITEMS = [
   {
@@ -448,6 +610,106 @@ const PORTFOLIO_ITEMS = [
    unless you want to change layout or behavior.
    ═══════════════════════════════════════════════════════════════ */
 
+
+/* ─── COMMERCIAL / VIDEO WORK RENDERER ─── */
+
+const YT_PLAY_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="5,3 17,10 5,17"/></svg>';
+
+function videoMedia(item, idx) {
+  if (item.type === 'youtube') {
+    return `
+      <div class="vframe ratio-${item.ratio}" data-yt-slot="${idx}">
+        <button class="yt-facade" type="button" data-yt="${item.youtubeId}" data-slot="${idx}"
+                aria-label="Play video${item.title ? ': ' + item.title : ''}">
+          <img src="https://i.ytimg.com/vi/${item.youtubeId}/maxresdefault.jpg"
+               alt="" loading="lazy" decoding="async"
+               onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${item.youtubeId}/hqdefault.jpg';" />
+          <span class="yt-play">${YT_PLAY_ICON}</span>
+        </button>
+      </div>`;
+  }
+  // Second <source> is a same-folder fallback so the page also works when the
+  // files are opened flat (local testing). On the live site the first one wins
+  // and the fallback is never requested. Safe to delete once deployed.
+  const flat = item.src.split('/').pop();
+  return `
+    <div class="vframe ratio-${item.ratio}">
+      <video class="v-local" controls playsinline preload="metadata"
+             data-poster-fallback="${item.poster.split('/').pop()}"
+             poster="${item.poster}"${item.title ? ` title="${item.title}"` : ''}>
+        <source src="${item.src}" type="video/mp4">
+        <source src="${flat}" type="video/mp4">
+        Your browser does not support embedded video.
+        <a href="${item.src}">Download the file</a> instead.
+      </video>
+    </div>`;
+}
+
+function videoCard(item, idx) {
+  return `
+    <article class="vcard">
+      ${videoMedia(item, idx)}
+      <div class="vcard-body">
+        ${item.title ? `<h3 class="vcard-title">${item.title}</h3>` : ''}
+        <p class="vcard-role"><strong>${item.role}</strong> — Tom Strandell</p>
+      </div>
+    </article>`;
+}
+
+function buildVideoSection() {
+  return `
+    <section class="work" id="commercial-work">
+      <h2 class="work-title">${VIDEO_SECTION_TITLE}</h2>
+      ${videoCard(VIDEO_FEATURED, 0)}
+      <div class="vgrid">
+        ${VIDEO_SUPPORTING.map((v, i) => videoCard(v, i + 1)).join('')}
+      </div>
+    </section>`;
+}
+
+function pauseAllVideos() {
+  document.querySelectorAll('video.v-local').forEach(v => { if (!v.paused) v.pause(); });
+}
+
+function initVideos() {
+  // Click-to-load YouTube: nothing third-party loads until the viewer asks.
+  document.querySelectorAll('.yt-facade').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.yt;
+      const slot = btn.closest('.vframe');
+      if (activeId) stopPlayer(activeId);   // stop any A/B audio
+      pauseAllVideos();
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.setAttribute('title', 'Commercial video');
+      // YouTube requires a valid Referer header since late 2025; without it the
+      // player returns Error 153. This is also why the embed cannot work from
+      // a file:// page — serve over http(s) to test.
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('loading', 'lazy');
+      slot.innerHTML = '';
+      slot.appendChild(iframe);
+    });
+  });
+
+  // Poster fallback for flat/local layouts (mirrors the <source> fallback above).
+  document.querySelectorAll('video.v-local[data-poster-fallback]').forEach(v => {
+    const probe = new Image();
+    probe.onerror = () => { v.poster = v.dataset.posterFallback; };
+    probe.src = v.getAttribute('poster');
+  });
+
+  // Only one thing plays at a time, across videos and audio players.
+  document.querySelectorAll('video.v-local').forEach(v => {
+    v.addEventListener('play', () => {
+      if (activeId) stopPlayer(activeId);
+      document.querySelectorAll('video.v-local').forEach(o => { if (o !== v && !o.paused) o.pause(); });
+    });
+  });
+}
+
 const PLAY_ICON  = '<svg viewBox="0 0 20 20"><polygon points="5,3 17,10 5,17"/></svg>';
 const PAUSE_ICON = '<svg viewBox="0 0 20 20"><rect x="4" y="3" width="4" height="14" rx="1"/><rect x="12" y="3" width="4" height="14" rx="1"/></svg>';
 
@@ -478,6 +740,7 @@ function buildPage() {
         <p class="tools">${c.tools}</p>
       </div>
     </section>
+    ${buildVideoSection()}
     <section class="cards">`;
 
   PORTFOLIO_ITEMS.forEach((item, i) => {
@@ -515,11 +778,11 @@ function buildPage() {
   });
 
   html += `
-    </section>
-    <footer class="footer">Portfolio built for demonstration purposes.</footer>`;
+    </section>`;
 
   app.innerHTML = html;
   initPlayers();
+  initVideos();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -582,6 +845,7 @@ function getInactiveAudio(id) {
 function togglePlay(id) {
   // If another player is active, stop it
   if (activeId && activeId !== id) stopPlayer(activeId);
+  pauseAllVideos();  // videos and audio never overlap
 
   const s = state[id];
   if (s.playing) {
