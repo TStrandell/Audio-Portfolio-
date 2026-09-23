@@ -47,8 +47,15 @@ body {
 .hero-identity {
   display: flex;
   align-items: center;
-  gap: 28px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px 28px;
   margin-bottom: 56px;
+}
+.hero-identity-main {
+  display: flex;
+  align-items: center;
+  gap: 28px;
 }
 .hero-headshot {
   width: 88px;
@@ -72,6 +79,38 @@ body {
   font-weight: 400;
   margin-top: 4px;
   letter-spacing: 0.02em;
+}
+
+/* ─── HERO SOCIAL LINKS ─── */
+.hero-social {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.hero-social-link {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: transparent;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+.hero-social-link:hover,
+.hero-social-link:focus-visible {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.3);
+  color: var(--text);
+}
+.hero-social-link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 
 /* ─── HEADLINE BLOCK ─── */
@@ -431,11 +470,226 @@ body {
   .yt-play { width: 52px; height: 52px; }
 }
 
+/* ─── SELECTED MUSIC ─── */
+.music {
+  border-top: 1px solid var(--divider);
+  padding-top: 48px;
+  margin-top: 28px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.music-title {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.music-subtitle {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+  margin-bottom: 24px;
+}
+
+.mplayer {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Now-playing row */
+.mp-now {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px 18px;
+}
+.mp-art {
+  width: 52px;
+  height: 52px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+  border: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.mp-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mp-art svg { width: 18px; height: 18px; fill: var(--muted); opacity: 0.7; }
+.mp-info { min-width: 0; flex: 1; }
+.mp-track-title {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp-track-genre {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp-play {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--divider);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+.mp-play:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+.mp-play svg { width: 15px; height: 15px; fill: currentColor; }
+
+/* Scrub + time */
+.mp-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px 20px;
+}
+.mp-time {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+  width: 34px;
+}
+.mp-time.mp-duration { text-align: right; }
+.mp-scrub-wrap {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.mp-scrub-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mp-scrub-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.55);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.05s linear, background 0.2s ease;
+}
+.mp-scrub-wrap:hover .mp-scrub-fill { background: rgba(255,255,255,0.75); }
+.mp-scrub-wrap:hover .mp-scrub-track { height: 4px; }
+
+/* Track list / selector */
+.mp-tracklist {
+  list-style: none;
+  border-top: 1px solid var(--divider);
+}
+.mp-track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 13px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: background 0.15s ease;
+}
+.mp-track:last-child { border-bottom: none; }
+.mp-track:hover { background: var(--hover); }
+.mp-track:focus-visible { background: var(--hover); outline: none; }
+.mp-track-index {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  width: 14px;
+  flex-shrink: 0;
+}
+.mp-track-eq {
+  width: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  height: 12px;
+}
+.mp-track-eq span {
+  width: 2px;
+  background: var(--muted);
+  border-radius: 1px;
+  opacity: 0;
+}
+.mp-track-body { min-width: 0; flex: 1; }
+.mp-track-name {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp-track-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mp-track.active { background: var(--hover); }
+.mp-track.active .mp-track-name { color: var(--text); }
+.mp-track.active .mp-track-index { opacity: 0; }
+.mp-track.active .mp-track-eq span { opacity: 1; }
+/* Subtle playing-indicator animation, off by default (respects reduced motion) */
+.mp-track.playing .mp-track-eq span { animation: mpEq 0.9s ease-in-out infinite; }
+.mp-track.playing .mp-track-eq span:nth-child(1) { height: 40%; animation-delay: -0.6s; }
+.mp-track.playing .mp-track-eq span:nth-child(2) { height: 90%; animation-delay: -0.3s; }
+.mp-track.playing .mp-track-eq span:nth-child(3) { height: 60%; animation-delay: 0s; }
+.mp-track:not(.playing) .mp-track-eq span { height: 40%; }
+@keyframes mpEq {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mp-track.playing .mp-track-eq span { animation: none; }
+}
+
+@media (max-width: 700px) {
+  .music { padding-top: 40px; }
+  .mp-now { padding: 18px 16px 14px; gap: 12px; }
+  .mp-art { width: 44px; height: 44px; }
+  .mp-track-title { font-size: 15px; }
+  .mp-progress { padding: 0 16px 16px; }
+  .mp-track { padding: 12px 16px; gap: 12px; }
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 600px) {
   .hero { padding-top: 48px; }
-  .hero-identity { gap: 20px; }
+  .hero-identity { gap: 16px 20px; }
+  .hero-identity-main { gap: 20px; }
   .hero-headshot { width: 68px; height: 68px; }
+  .hero-social-link { width: 30px; height: 30px; }
+  .hero-social-link svg { width: 14px; height: 14px; }
   .card { padding: 24px 20px 22px; }
   .player { padding: 14px 14px 12px; }
   .player-controls { gap: 8px; }
@@ -465,6 +719,39 @@ const PORTFOLIO_CONFIG = {
   tools: "Logic Pro \u00B7 iZotope RX \u00B7 FabFilter \u00B7 Waves"
 };
 
+/* ═══════════════════════════════════════════════════════════════
+   SOCIAL LINKS — shown as small icons in the hero.
+   Replace the placeholders below with the real profile URLs.
+   ═══════════════════════════════════════════════════════════════ */
+
+const SOCIAL_LINKS = {
+  spotify: "SPOTIFY_URL",
+  instagram: "INSTAGRAM_URL"
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTED MUSIC — composer/producer showcase. Edit the section
+   copy and the track list here.
+
+   Each track needs: title, an audio file path, and (optionally)
+   a short genre/style descriptor and artwork image path.
+
+   Drop the final MP3s into assets/music/ using the file names
+   below (or update `src` to match whatever you name them), and
+   replace each placeholder title/genre with the real thing.
+   Keep to roughly 4–6 tracks; 5 is the sweet spot.
+   ═══════════════════════════════════════════════════════════════ */
+
+const MUSIC_SECTION_TITLE = "Selected Music";
+const MUSIC_SECTION_SUBTITLE = "Written, produced, and mixed by Tom.";
+
+const MUSIC_TRACKS = [
+  { title: "Track One",   genre: "Genre / style", src: "assets/music/track-01.mp3", artwork: null },
+  { title: "Track Two",   genre: "Genre / style", src: "assets/music/track-02.mp3", artwork: null },
+  { title: "Track Three", genre: "Genre / style", src: "assets/music/track-03.mp3", artwork: null },
+  { title: "Track Four",  genre: "Genre / style", src: "assets/music/track-04.mp3", artwork: null },
+  { title: "Track Five",  genre: "Genre / style", src: "assets/music/track-05.mp3", artwork: null }
+];
 
 /* ═══════════════════════════════════════════════════════════════
    COMMERCIAL / VIDEO WORK — edit titles & credits here.
@@ -611,6 +898,67 @@ const PORTFOLIO_ITEMS = [
    ═══════════════════════════════════════════════════════════════ */
 
 
+/* ─── HERO SOCIAL LINKS RENDERER ─── */
+
+const SPOTIFY_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v10.55A4 4 0 1 0 11 17V7h6V3H9z"/></svg>';
+const INSTAGRAM_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h2.2l.9-1.4c.2-.3.5-.6.9-.6h2c.4 0 .7.2.9.6l.9 1.4H17a3 3 0 0 1 3 3v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zm5 4.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9zm0 2a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM16.5 6a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></svg>';
+
+function buildHeroSocial() {
+  return `
+    <div class="hero-social">
+      <a class="hero-social-link" href="${SOCIAL_LINKS.spotify}" target="_blank" rel="noopener" aria-label="Listen on Spotify">${SPOTIFY_ICON}</a>
+      <a class="hero-social-link" href="${SOCIAL_LINKS.instagram}" target="_blank" rel="noopener" aria-label="Follow on Instagram">${INSTAGRAM_ICON}</a>
+    </div>`;
+}
+
+/* ─── SELECTED MUSIC RENDERER ─── */
+
+const MUSIC_NOTE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3v10.55A4 4 0 1 0 11 17V7h6V3H9z"/></svg>';
+
+function musicTrackRow(t, i) {
+  return `
+    <li>
+      <button class="mp-track" type="button" data-index="${i}" aria-label="Play ${t.title}">
+        <span class="mp-track-index">${i + 1}</span>
+        <span class="mp-track-eq" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="mp-track-body">
+          <span class="mp-track-name">${t.title}</span>
+          ${t.genre ? `<span class="mp-track-sub">${t.genre}</span>` : ''}
+        </span>
+      </button>
+    </li>`;
+}
+
+function buildMusicSection() {
+  if (!MUSIC_TRACKS.length) return '';
+  return `
+    <section class="music" id="selected-music">
+      <h2 class="music-title">${MUSIC_SECTION_TITLE}</h2>
+      ${MUSIC_SECTION_SUBTITLE ? `<p class="music-subtitle">${MUSIC_SECTION_SUBTITLE}</p>` : ''}
+      <div class="mplayer" id="mplayer">
+        <div class="mp-now">
+          <div class="mp-art" id="mp-art">${MUSIC_NOTE_ICON}</div>
+          <div class="mp-info">
+            <div class="mp-track-title" id="mp-track-title"></div>
+            <div class="mp-track-genre" id="mp-track-genre"></div>
+          </div>
+          <button class="mp-play" id="mp-play" type="button" aria-label="Play">${PLAY_ICON}</button>
+        </div>
+        <div class="mp-progress">
+          <span class="mp-time" id="mp-elapsed">0:00</span>
+          <div class="mp-scrub-wrap" id="mp-scrub-wrap">
+            <div class="mp-scrub-track"><div class="mp-scrub-fill" id="mp-scrub-fill"></div></div>
+          </div>
+          <span class="mp-time mp-duration" id="mp-duration">0:00</span>
+        </div>
+        <audio id="mp-audio" preload="metadata"></audio>
+        <ul class="mp-tracklist" id="mp-tracklist">
+          ${MUSIC_TRACKS.map(musicTrackRow).join('')}
+        </ul>
+      </div>
+    </section>`;
+}
+
 /* ─── COMMERCIAL / VIDEO WORK RENDERER ─── */
 
 const YT_PLAY_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><polygon points="5,3 17,10 5,17"/></svg>';
@@ -679,6 +1027,7 @@ function initVideos() {
       const slot = btn.closest('.vframe');
       if (activeId) stopPlayer(activeId);   // stop any A/B audio
       pauseAllVideos();
+      pauseMusicPlayer();
       const iframe = document.createElement('iframe');
       iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
       iframe.setAttribute('title', 'Commercial video');
@@ -705,6 +1054,7 @@ function initVideos() {
   document.querySelectorAll('video.v-local').forEach(v => {
     v.addEventListener('play', () => {
       if (activeId) stopPlayer(activeId);
+      pauseMusicPlayer();
       document.querySelectorAll('video.v-local').forEach(o => { if (o !== v && !o.paused) o.pause(); });
     });
   });
@@ -728,11 +1078,14 @@ function buildPage() {
   let html = `
     <section class="hero">
       <div class="hero-identity">
-        <img class="hero-headshot" src="${c.identity.headshotUrl}" alt="${c.identity.name}" />
-        <div>
-          <div class="hero-name">${c.identity.name}</div>
-          <div class="hero-title">${c.identity.title}</div>
+        <div class="hero-identity-main">
+          <img class="hero-headshot" src="${c.identity.headshotUrl}" alt="${c.identity.name}" />
+          <div>
+            <div class="hero-name">${c.identity.name}</div>
+            <div class="hero-title">${c.identity.title}</div>
+          </div>
         </div>
+        ${buildHeroSocial()}
       </div>
       <div class="headline-block">
         <h1 class="headline">${c.headline}</h1>
@@ -740,6 +1093,7 @@ function buildPage() {
         <p class="tools">${c.tools}</p>
       </div>
     </section>
+    ${buildMusicSection()}
     ${buildVideoSection()}
     <section class="cards">`;
 
@@ -783,6 +1137,7 @@ function buildPage() {
   app.innerHTML = html;
   initPlayers();
   initVideos();
+  initMusicPlayer();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -791,6 +1146,12 @@ function buildPage() {
 
 const state = {};       // keyed by player id
 let activeId = null;    // which player is currently playing
+
+// Cross-section playback coordination: the Selected Music player registers
+// its own pause function here so the existing A/B and video code (below)
+// can stop it, keeping "only one thing plays at a time" true site-wide.
+let musicPause = null;
+function pauseMusicPlayer() { if (musicPause) musicPause(); }
 
 function initPlayers() {
   PORTFOLIO_ITEMS.forEach((_, i) => {
@@ -846,6 +1207,7 @@ function togglePlay(id) {
   // If another player is active, stop it
   if (activeId && activeId !== id) stopPlayer(activeId);
   pauseAllVideos();  // videos and audio never overlap
+  pauseMusicPlayer();
 
   const s = state[id];
   if (s.playing) {
@@ -922,6 +1284,137 @@ function updateUI(id) {
 function updatePlayBtn(id) {
   const btn = document.querySelector(`.btn-play[data-id="${id}"]`);
   btn.innerHTML = state[id].playing ? PAUSE_ICON : PLAY_ICON;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SELECTED MUSIC PLAYER ENGINE
+   One <audio> element is reused for every track (never five+
+   independent players). Switching tracks always stops/resets the
+   previous one first. Nothing autoplays on page load; switching to
+   another track only autoplays if something was already playing,
+   which keeps the "play → click next → click next" flow fast
+   without music starting on its own on first render.
+   ═══════════════════════════════════════════════════════════════ */
+
+function initMusicPlayer() {
+  const tracks = MUSIC_TRACKS;
+  const mplayer = document.getElementById('mplayer');
+  if (!tracks.length || !mplayer) return;
+
+  const audio      = document.getElementById('mp-audio');
+  const playBtn    = document.getElementById('mp-play');
+  const titleEl    = document.getElementById('mp-track-title');
+  const genreEl    = document.getElementById('mp-track-genre');
+  const artEl      = document.getElementById('mp-art');
+  const elapsedEl  = document.getElementById('mp-elapsed');
+  const durationEl = document.getElementById('mp-duration');
+  const fillEl     = document.getElementById('mp-scrub-fill');
+  const scrubWrap  = document.getElementById('mp-scrub-wrap');
+  const trackBtns  = Array.from(document.querySelectorAll('.mp-track'));
+
+  let index = 0;
+  let playing = false;
+  let raf = null;
+
+  function setTrackStates() {
+    trackBtns.forEach(btn => {
+      const isActive = Number(btn.dataset.index) === index;
+      btn.classList.toggle('active', isActive);
+      btn.classList.toggle('playing', isActive && playing);
+    });
+  }
+
+  function loadTrack(i, opts = {}) {
+    const t = tracks[i];
+    index = i;
+    audio.src = t.src;
+    audio.currentTime = 0;
+    titleEl.textContent = t.title;
+    genreEl.textContent = t.genre || '';
+    genreEl.style.display = t.genre ? '' : 'none';
+    artEl.innerHTML = t.artwork
+      ? `<img src="${t.artwork}" alt="" loading="lazy" />`
+      : MUSIC_NOTE_ICON;
+    updateUI();
+    setTrackStates();
+    if (opts.autoplay) play(); else updatePlayBtn();
+  }
+
+  function play() {
+    // Only one thing plays at a time, site-wide.
+    if (activeId) stopPlayer(activeId);
+    pauseAllVideos();
+    audio.play().catch(() => {});
+    playing = true;
+    updatePlayBtn();
+    setTrackStates();
+    tick();
+  }
+
+  function pause() {
+    audio.pause();
+    playing = false;
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    updatePlayBtn();
+    setTrackStates();
+  }
+  musicPause = pause;   // let the A/B + video code stop this player too
+
+  function updatePlayBtn() {
+    playBtn.innerHTML = playing ? PAUSE_ICON : PLAY_ICON;
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  }
+
+  function tick() {
+    if (!playing) return;
+    updateUI();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function updateUI() {
+    const dur = audio.duration || 0;
+    const cur = audio.currentTime || 0;
+    const pct = dur ? (cur / dur) * 100 : 0;
+    fillEl.style.width = pct + '%';
+    elapsedEl.textContent = fmt(cur);
+    durationEl.textContent = fmt(dur);
+  }
+
+  playBtn.addEventListener('click', () => { playing ? pause() : play(); });
+
+  trackBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = Number(btn.dataset.index);
+      if (i === index) { playing ? pause() : play(); return; }
+      const wasPlaying = playing;
+      loadTrack(i, { autoplay: wasPlaying });
+    });
+  });
+
+  audio.addEventListener('ended', () => {
+    pause();
+    audio.currentTime = 0;
+    updateUI();
+  });
+
+  // Scrub / seek — same touch+mouse handling as the A/B player above.
+  let scrubbing = false;
+  const handleScrub = (e) => {
+    const rect = scrubWrap.getBoundingClientRect();
+    const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    if (audio.duration) {
+      audio.currentTime = pct * audio.duration;
+      updateUI();
+    }
+  };
+  scrubWrap.addEventListener('mousedown', (e) => { scrubbing = true; handleScrub(e); });
+  scrubWrap.addEventListener('touchstart', (e) => { scrubbing = true; handleScrub(e.touches[0]); }, { passive: true });
+  window.addEventListener('mousemove', (e) => { if (scrubbing) handleScrub(e); });
+  window.addEventListener('touchmove', (e) => { if (scrubbing) handleScrub(e.touches[0]); }, { passive: true });
+  window.addEventListener('mouseup', () => { scrubbing = false; });
+  window.addEventListener('touchend', () => { scrubbing = false; });
+
+  loadTrack(0);   // select the first track without playing it
 }
 
 /* ─── INIT ─── */
