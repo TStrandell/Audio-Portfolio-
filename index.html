@@ -1037,7 +1037,10 @@ const VIDEO_SECTION_TITLE = "Commercial & Video Work";
 const VIDEO_FEATURED = {
   type: "local",
   src: "assets/commercial-02.mp4",
-  poster: "assets/commercial-02-poster.jpg",
+  // Custom cover supplied by Tom. The .jpg is a 4:3 crop of the original
+  // screenshot (assets/featured-commercial-poster.png) matching the video
+  // frame exactly, so it fills the slot with no bars under object-fit: contain.
+  poster: "assets/featured-commercial-poster.jpg",
   // Brand confirmed by Tom.
   title: "Cadence",
   role: "Production, Mix & Master",
