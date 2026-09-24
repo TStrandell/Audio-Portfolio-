@@ -1830,6 +1830,11 @@ function initMusicPlayer() {
     const rect = scrubWrap.getBoundingClientRect();
     const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     if (audio.duration) {
+      // A manual seek ends any first-play fade on the spot — whether it is
+      // mid-ramp or still waiting for playback to start — and restores full
+      // volume. The track is still marked heard once it sounds, so the fade
+      // never re-triggers for it this session.
+      if (fadeRaf || pendingFade) cancelFade();
       audio.currentTime = pct * audio.duration;
       // A deliberate seek before a track's first play wins over previewStart.
       if (!heard.has(index) && !playing) userPlaced.add(index);
