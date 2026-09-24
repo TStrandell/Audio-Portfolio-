@@ -1031,16 +1031,20 @@ const MUSIC_TRACKS = [
 
 const VIDEO_SECTION_TITLE = "Commercial & Video Work";
 
+// Featured slot (large, top). File names are unchanged from before the
+// swap, so commercial-02 is featured and commercial-featured sits
+// bottom-right.
 const VIDEO_FEATURED = {
   type: "local",
-  src: "assets/commercial-featured.mp4",
-  poster: "assets/commercial-featured-poster.jpg",
-  // Brand confirmed from the closing title card in the film itself.
+  src: "assets/commercial-02.mp4",
+  poster: "assets/commercial-02-poster.jpg",
+  // Brand confirmed by Tom.
   title: "Cadence",
-  role: "Mix & Master",
+  role: "Production, Mix & Master",
   ratio: "4x3"
 };
 
+// Supporting row: [bottom-left, bottom-right].
 const VIDEO_SUPPORTING = [
   {
     type: "local",
@@ -1053,10 +1057,11 @@ const VIDEO_SUPPORTING = [
   },
   {
     type: "local",
-    src: "assets/commercial-02.mp4",
-    poster: "assets/commercial-02-poster.jpg",
-    title: null,
-    role: "Production, Mix & Master",
+    src: "assets/commercial-featured.mp4",
+    poster: "assets/commercial-featured-poster.jpg",
+    // Brand confirmed from the closing title card in the film itself.
+    title: "Cadence",
+    role: "Mix & Master",
     ratio: "4x3"
   }
 ];
