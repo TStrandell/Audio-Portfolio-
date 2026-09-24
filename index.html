@@ -20,7 +20,7 @@
   --hover: rgba(255,255,255,0.06);
   --serif: 'Bodoni Moda', 'Playfair Display', Georgia, serif;
   --sans: 'Inter', -apple-system, sans-serif;
-  --cover-size: 168px;
+  --cover-size: 160px;
 }
 html { scroll-behavior: smooth; }
 body {
@@ -88,18 +88,140 @@ body {
   max-width: 540px;
 }
 
-/* ─── HERO SOCIAL PREVIEW CARDS ─── */
-.hero-social-cards {
-  display: flex;
+/* ─── HERO EXTERNAL DESTINATIONS ───
+   One dominant portal (tomfreeze.com, client services) plus two
+   supporting cards (Spotify, Instagram) stacked beside it. */
+.hero-links {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
   gap: 12px;
-  margin-top: 26px;
+  margin-top: 30px;
 }
+.hero-links-side {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  min-height: 0;
+}
+
+/* Primary portal — tomfreeze.com */
+.portal {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 2;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  background: #0b0b0b;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.portal:hover,
+.portal:focus-visible {
+  border-color: rgba(255,255,255,0.32);
+  transform: translateY(-2px);
+  outline: none;
+}
+/* Poster and video share one crop: the recording is very wide with the
+   site content in the middle, so both are zoomed slightly around it. */
+.portal-poster,
+.portal-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 49% 15%;
+  transform: scale(1.3);
+  transform-origin: 49% 15%;
+  pointer-events: none;
+  transition: transform 0.6s ease;
+}
+.portal-video {
+  opacity: 0;                         /* poster shows until frames are actually playing */
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+.portal-video.is-playing { opacity: 1; }
+.portal-video.is-looping { opacity: 0; transition: transform 0.6s ease, opacity 0.45s ease; }
+.portal:hover .portal-poster,
+.portal:hover .portal-video,
+.portal:focus-visible .portal-poster,
+.portal:focus-visible .portal-video { transform: scale(1.34); }
+.portal-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.45) 34%, rgba(10,10,10,0) 60%);
+  pointer-events: none;
+}
+.portal-url {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 100px;
+  background: rgba(12,12,12,0.62);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.82);
+}
+.portal-url::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+}
+.portal-body {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.portal-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.72);
+}
+.portal-title {
+  font-family: var(--serif);
+  font-size: clamp(19px, 2.6vw, 24px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: #fff;
+}
+.portal-cta {
+  margin-top: 6px;
+  width: fit-content;
+  font-size: 13px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.35);
+  padding-bottom: 1px;
+  transition: border-color 0.2s ease;
+}
+.portal:hover .portal-cta,
+.portal:focus-visible .portal-cta { border-color: rgba(255,255,255,0.85); }
+@media (prefers-reduced-motion: reduce) {
+  .portal-video { display: none; }
+  .portal, .portal-poster { transition: none; }
+}
+
+/* Supporting cards — Spotify / Instagram */
 .social-card {
   position: relative;
-  width: calc(var(--cover-size) * 0.5);
-  height: calc(var(--cover-size) * 0.5);
-  flex-shrink: 0;
   display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--card-border);
@@ -112,18 +234,23 @@ body {
   transform: translateY(-2px);
   outline: none;
 }
+/* Each card sets --focus (crop anchor) and --zoom inline so the crop
+   lands on a recognizable part of its profile screenshot. */
 .social-card-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: var(--focus, 50% 50%);
+  transform: scale(var(--zoom, 1));
+  transform-origin: var(--focus, 50% 50%);
   filter: grayscale(30%) brightness(0.82);
   transition: transform 0.5s ease, filter 0.3s ease;
 }
 .social-card:hover .social-card-bg,
 .social-card:focus-visible .social-card-bg {
-  transform: scale(1.07);
+  transform: scale(calc(var(--zoom, 1) * 1.05));
   filter: grayscale(10%) brightness(0.7);
 }
 .social-card-scrim {
@@ -135,7 +262,8 @@ body {
   position: absolute;
   top: 45%;
   left: 50%;
-  width: 28%;
+  width: clamp(28px, 13%, 40px);
+  aspect-ratio: 1 / 1;
   transform: translate(-50%, -50%);
   color: #fff;
   opacity: 0.6;
@@ -149,16 +277,24 @@ body {
 }
 .social-card-label {
   position: absolute;
-  left: 9px;
-  bottom: 7px;
-  font-size: 10px;
-  letter-spacing: 0.05em;
+  left: 12px;
+  bottom: 10px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.92);
 }
-.social-card.no-image .social-card-mark {
-  opacity: 0.85;
-  width: 34%;
+
+@media (max-width: 600px) {
+  .hero-links { grid-template-columns: 1fr; margin-top: 26px; }
+  .hero-links-side { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .hero-links-side .social-card { height: auto; aspect-ratio: 1 / 1; }
+  .portal { aspect-ratio: 4 / 3; }
+  .portal-body { left: 16px; right: 16px; bottom: 15px; }
+}
+@media (max-width: 360px) {
+  .portal-scrim { background: linear-gradient(0deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.6) 45%, rgba(10,10,10,0) 72%); }
+  .portal-title { font-size: 18px; }
 }
 
 /* ─── A/B SECTION INTRO (moved here from the hero; introduces the
@@ -577,14 +713,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mp-track-genre {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .mp-play {
   width: 44px;
   height: 44px;
@@ -656,15 +784,20 @@ body {
   overflow-x: auto;
   scroll-snap-type: x proximity;
   list-style: none;
-  padding: 2px 1px 6px;
+  padding: 4px 4px 6px;   /* room for the selected cover's slight scale-up */
+  scroll-padding-inline: 4px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
 .mp-rail::-webkit-scrollbar { display: none; }
 .mp-rail-wrap--scrollable .mp-rail {
-  mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 14px, #000 calc(100% - 14px), transparent 100%);
+  --fade-l: 14px;
+  --fade-r: 14px;
+  mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
 }
+.mp-rail-wrap--scrollable .mp-rail.at-start { --fade-l: 0px; }
+.mp-rail-wrap--scrollable .mp-rail.at-end   { --fade-r: 0px; }
 .mp-rail-item { scroll-snap-align: start; }
 
 .mp-rail-nav {
@@ -774,15 +907,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.mc-genre {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 1px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 
 @media (max-width: 700px) {
   .music { padding-top: 40px; }
@@ -839,17 +963,37 @@ const AB_INTRO = {
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   SOCIAL LINKS — shown as small preview cards in the hero.
+   EXTERNAL DESTINATIONS — shown directly under the hero.
+   The tomfreeze.com portal is the primary card; Spotify and
+   Instagram are the smaller supporting cards beside it.
+
+   Previews use web-sized WebP derivatives. The full-resolution
+   originals stay in assets/social/ (*.png) and are not loaded.
+   `focus` / `zoom` control each card's crop in CSS only.
    ═══════════════════════════════════════════════════════════════ */
+
+const CLIENT_PORTAL = {
+  url: "https://tomfreeze.com",
+  displayUrl: "tomfreeze.com",
+  eyebrow: "Client Services",
+  title: "Tom Freeze \u2014 Mixing & Mastering",
+  cta: "Visit tomfreeze.com \u2197",
+  video: "assets/social/website-preview.mp4",
+  poster: "assets/social/website-preview-poster-web.webp"
+};
 
 const SOCIAL_LINKS = {
   spotify: {
     url: "https://open.spotify.com/artist/2RF6ynOAWE84yZsOLE0tpo?si=xDzeywpZQyu2_Ec2bID7YQ",
-    preview: "assets/social/spotify-preview.png"
+    preview: "assets/social/spotify-preview-web.webp",
+    focus: "0% 0%",     // header + discography row
+    zoom: 2
   },
   instagram: {
     url: "https://www.instagram.com/tomfreeeze/",
-    preview: "assets/social/instagram-preview.png"
+    preview: "assets/social/instagram-preview-web.webp",
+    focus: "0% 0%",     // top-left of the post grid
+    zoom: 1.8
   }
 };
 
@@ -857,25 +1001,23 @@ const SOCIAL_LINKS = {
    SELECTED MUSIC — composer/producer showcase. Edit the section
    copy and the track list here.
 
-   Each track needs: title, an audio file path, and (optionally)
-   a short genre/style descriptor and artwork image path.
+   Array order = left-to-right rail order; the first track is the
+   default selection on page load (never autoplayed).
 
-   Drop the final MP3s into assets/music/ using the file names
-   below (or update `src` to match whatever you name them), and
-   replace each placeholder title/genre with the real thing.
-   Keep to roughly 4–6 tracks; 5 is the sweet spot.
+   Each track: title, audio `src`, `artwork`, and `previewStart`
+   (seconds). The first time a track is played in a session it
+   starts at `previewStart` with a ~3 s fade-in; after that it
+   behaves like a normal player. The full song stays seekable.
    ═══════════════════════════════════════════════════════════════ */
 
 const MUSIC_SECTION_TITLE = "Selected Music";
 const MUSIC_SECTION_SUBTITLE = "Written, produced, and mixed by Tom.";
 
 const MUSIC_TRACKS = [
-  { title: "Track One",   genre: "Genre / style", src: "assets/music/track-01.mp3", artwork: "assets/music/music-01-cover.png" },
-  { title: "Track Two",   genre: "Genre / style", src: "assets/music/track-02.mp3", artwork: "assets/music/music-02-cover.jpg" },
-  { title: "Track Three", genre: "Genre / style", src: "assets/music/track-03.mp3", artwork: "assets/music/music-03-cover.jpeg" },
-  { title: "Track Four",  genre: "Genre / style", src: "assets/music/track-04.mp3", artwork: "assets/music/music-04-cover.jpg" },
-  // No music-05-cover was supplied yet — this one still uses the icon fallback.
-  { title: "Track Five",  genre: "Genre / style", src: "assets/music/track-05.mp3", artwork: null }
+  { title: "Broken Harmony", src: "assets/music/track-02.mp3", artwork: "assets/music/music-02-cover.jpg",  previewStart: 89  },  // 1:29
+  { title: "Spectral Mist",  src: "assets/music/track-01.mp3", artwork: "assets/music/music-01-cover.png",  previewStart: 153 },  // 2:33
+  { title: "Come Closer",    src: "assets/music/track-03.mp3", artwork: "assets/music/music-03-cover.jpeg", previewStart: 34  },  // 0:34
+  { title: "Imitation Era",  src: "assets/music/track-04.mp3", artwork: "assets/music/music-04-cover.jpg",  previewStart: 68  }   // 1:08
 ];
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1031,22 +1173,47 @@ const PORTFOLIO_ITEMS = [
 const SPOTIFY_MARK = '<svg viewBox="0 0 168 168" aria-hidden="true"><path d="M83.996.277C37.747.277.253 37.77.253 84.019c0 46.251 37.494 83.741 83.743 83.741 46.254 0 83.744-37.49 83.744-83.741 0-46.246-37.49-83.738-83.744-83.742zm38.404 120.78a5.217 5.217 0 0 1-7.18 1.73c-19.662-12.01-44.414-14.73-73.564-8.07a5.222 5.222 0 0 1-6.249-3.93 5.213 5.213 0 0 1 3.926-6.25c31.9-7.291 59.263-4.15 81.337 9.34 2.46 1.51 3.24 4.72 1.73 7.18zm10.25-22.805c-1.89 3.075-5.91 4.045-8.98 2.155-22.51-13.839-56.823-17.846-83.448-9.764-3.453 1.043-7.1-.903-8.148-4.35a6.538 6.538 0 0 1 4.354-8.143c30.413-9.228 68.222-4.758 94.072 11.127 3.07 1.89 4.04 5.91 2.15 8.976v-.001zm.88-23.744c-26.99-16.031-71.52-17.505-97.289-9.684-4.138 1.255-8.514-1.081-9.768-5.219a7.835 7.835 0 0 1 5.221-9.771c29.581-8.98 78.756-7.245 109.83 11.202a7.823 7.823 0 0 1 2.74 10.733c-2.2 3.722-7.02 4.949-10.73 2.739z"/></svg>';
 const INSTAGRAM_MARK = '<svg viewBox="0 0 448 448" aria-hidden="true"><path d="M224 141.7c-45.5 0-82.3 36.8-82.3 82.3s36.8 82.3 82.3 82.3 82.3-36.8 82.3-82.3-36.8-82.3-82.3-82.3zM398.8 80c-10.1-25.6-30-45.5-55.6-55.6C312.3 12.3 269.5 12.4 224 12.4c-45.5 0-88.3-.1-119.2 12C79.2 34.5 59.3 54.4 49.2 80 37.1 111 37.2 153.7 37.2 224c0 70.3-.1 113 12 144 10.1 25.6 30 45.5 55.6 55.6 30.9 12.2 73.7 12.1 119.2 12.1 45.5 0 88.3.1 119.2-12.1 25.6-10.1 45.5-30 55.6-55.6 12.2-31 12.1-73.7 12.1-144 0-70.3.1-113-12.1-144zM224 348c-68.5 0-124-55.5-124-124s55.5-124 124-124 124 55.5 124 124-55.5 124-124 124zm129.3-224.1c-16 0-29-13-29-29s13-29 29-29 29 13 29 29-13 29-29 29z"/></svg>';
 
-function socialCard(key, mark, label) {
+function socialCard(key, mark, label, ariaLabel) {
   const s = SOCIAL_LINKS[key];
   return `
-    <a class="social-card" href="${s.url}" target="_blank" rel="noopener" aria-label="${label} — opens in a new tab">
-      <img class="social-card-bg" src="${s.preview}" alt="" loading="lazy" decoding="async" />
+    <a class="social-card" href="${s.url}" target="_blank" rel="noopener" aria-label="${ariaLabel} (opens in a new tab)"
+       style="--focus: ${s.focus}; --zoom: ${s.zoom};">
+      <img class="social-card-bg" src="${s.preview}" alt="" decoding="async" />
       <span class="social-card-scrim" aria-hidden="true"></span>
       <span class="social-card-mark" aria-hidden="true">${mark}</span>
-      <span class="social-card-label">${label}</span>
+      <span class="social-card-label" aria-hidden="true">${label} \u2197</span>
     </a>`;
 }
 
-function buildHeroSocialCards() {
+// The video has no `src` in markup: initPortalPreview() attaches it only
+// when motion is allowed, so reduced-motion users never download it and
+// the poster <img> is what everyone sees first.
+function clientPortal() {
+  const p = CLIENT_PORTAL;
   return `
-    <div class="hero-social-cards">
-      ${socialCard('spotify', SPOTIFY_MARK, 'Spotify')}
-      ${socialCard('instagram', INSTAGRAM_MARK, 'Instagram')}
+    <a class="portal" href="${p.url}" target="_blank" rel="noopener"
+       aria-label="${p.title}: client services website at ${p.displayUrl} (opens in a new tab)">
+      <img class="portal-poster" src="${p.poster}" alt="" decoding="async" />
+      <video class="portal-video" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback
+             tabindex="-1" aria-hidden="true" poster="${p.poster}" data-src="${p.video}"></video>
+      <span class="portal-scrim" aria-hidden="true"></span>
+      <span class="portal-url" aria-hidden="true">${p.displayUrl}</span>
+      <span class="portal-body" aria-hidden="true">
+        <span class="portal-eyebrow">${p.eyebrow}</span>
+        <span class="portal-title">${p.title}</span>
+        <span class="portal-cta">${p.cta}</span>
+      </span>
+    </a>`;
+}
+
+function buildHeroLinks() {
+  return `
+    <div class="hero-links">
+      ${clientPortal()}
+      <div class="hero-links-side">
+        ${socialCard('spotify', SPOTIFY_MARK, 'Spotify', 'Tom Freeze on Spotify')}
+        ${socialCard('instagram', INSTAGRAM_MARK, 'Instagram', 'Tom Freeze on Instagram')}
+      </div>
     </div>`;
 }
 
@@ -1083,7 +1250,6 @@ function musicCoverCard(t, i) {
         </span>
         <span class="mc-caption">
           <span class="mc-name">${t.title}</span>
-          ${t.genre ? `<span class="mc-genre">${t.genre}</span>` : ''}
         </span>
       </button>
     </li>`;
@@ -1100,7 +1266,6 @@ function buildMusicSection() {
           <div class="mp-transport-art" id="mp-art">${MUSIC_NOTE_ICON}</div>
           <div class="mp-transport-info">
             <div class="mp-track-title" id="mp-track-title"></div>
-            <div class="mp-track-genre" id="mp-track-genre"></div>
           </div>
           <button class="mp-play" id="mp-play" type="button" aria-label="Play">${PLAY_ICON}</button>
         </div>
@@ -1252,7 +1417,7 @@ function buildPage() {
         </div>
       </div>
       <p class="hero-desc">${c.identity.description}</p>
-      ${buildHeroSocialCards()}
+      ${buildHeroLinks()}
     </section>
     ${buildMusicSection()}
     ${buildVideoSection()}
@@ -1300,6 +1465,7 @@ function buildPage() {
   initPlayers();
   initVideos();
   initMusicPlayer();
+  initPortalPreview();
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -1450,13 +1616,23 @@ function updatePlayBtn(id) {
 
 /* ═══════════════════════════════════════════════════════════════
    SELECTED MUSIC PLAYER ENGINE
-   One <audio> element is reused for every track (never five+
-   independent players). Switching tracks always stops/resets the
-   previous one first. Nothing autoplays on page load; switching to
-   another track only autoplays if something was already playing,
-   which keeps the "play → click next → click next" flow fast
-   without music starting on its own on first render.
+   One <audio> element is reused for every track. Only the selected
+   track's metadata is fetched (preload="metadata"); audio data loads
+   when it is played.
+
+   Playback rules
+   - Nothing autoplays on page load; the first track is just selected.
+   - Selecting another cover while paused: selects it, stays paused.
+   - Selecting another cover while playing: keeps playing, new track.
+   - First play of a track this session: start at its previewStart
+     and fade in over ~3 s. Later plays/resumes: no jump, no fade.
+   - Returning to a track already played resumes where it was left.
+   - The seek bar and times always reflect the real full-length track.
+   - Starting music pauses A/B audio and commercial video, and they
+     pause this player (via musicPause) — one audible source at a time.
    ═══════════════════════════════════════════════════════════════ */
+
+const MUSIC_FADE_MS = 3000;
 
 function initMusicPlayer() {
   const tracks = MUSIC_TRACKS;
@@ -1466,7 +1642,6 @@ function initMusicPlayer() {
   const audio      = document.getElementById('mp-audio');
   const playBtn    = document.getElementById('mp-play');
   const titleEl    = document.getElementById('mp-track-title');
-  const genreEl    = document.getElementById('mp-track-genre');
   const artEl      = document.getElementById('mp-art');
   const elapsedEl  = document.getElementById('mp-elapsed');
   const durationEl = document.getElementById('mp-duration');
@@ -1482,8 +1657,55 @@ function initMusicPlayer() {
   let playing = false;
   let raf = null;
 
-  // Cover art that 404s falls back to the note glyph instead of a
-  // broken-image icon (same defensive pattern as the video posters above).
+  const heard       = new Set();   // tracks that have actually started sounding this session
+  const userPlaced  = new Set();   // unheard tracks the listener seeked manually before first play
+  const savedPos    = new Map();   // index -> last position, for returning to a heard track
+  let pendingFade   = false;       // fade should start on the next 'playing' event
+  let fadeRaf       = null;
+  let playAttempt   = 0;
+
+  // Some platforms (notably iOS Safari) ignore audio.volume. Detect that so
+  // the fade is skipped there instead of silently doing nothing.
+  const volumeWorks = (() => {
+    try { audio.volume = 0.5; const ok = Math.abs(audio.volume - 0.5) < 0.01; audio.volume = 1; return ok; }
+    catch (e) { return false; }
+  })();
+
+  /* ─── Fade ─── Any path that stops or re-routes playback calls
+     cancelFade(), which always restores full volume, so rapid
+     play/pause/switching can never strand the player at a low level. */
+  function cancelFade() {
+    pendingFade = false;
+    if (fadeRaf) { cancelAnimationFrame(fadeRaf); fadeRaf = null; }
+    audio.volume = 1;
+  }
+  function runFade() {
+    if (fadeRaf) cancelAnimationFrame(fadeRaf);
+    const t0 = performance.now();
+    const step = (now) => {
+      const p = Math.min(1, (now - t0) / MUSIC_FADE_MS);
+      audio.volume = p * p;              // squared curve: perceptually even rise
+      fadeRaf = p < 1 ? requestAnimationFrame(step) : null;
+    };
+    audio.volume = 0;
+    fadeRaf = requestAnimationFrame(step);
+  }
+  audio.addEventListener('playing', () => {
+    heard.add(index);
+    userPlaced.delete(index);
+    if (pendingFade) { pendingFade = false; runFade(); }
+  });
+
+  // currentTime can only be set once metadata is known.
+  function seekWhenReady(t) {
+    if (audio.readyState >= 1) { audio.currentTime = t; updateUI(); return; }
+    const want = index;
+    audio.addEventListener('loadedmetadata', () => {
+      if (index === want) { audio.currentTime = t; updateUI(); }
+    }, { once: true });
+  }
+
+  // Cover art that 404s shows the note glyph instead of a broken image.
   document.querySelectorAll('.mc-art img').forEach(img => {
     img.addEventListener('error', () => {
       img.closest('.mc-art').classList.add('mc-art--empty');
@@ -1500,22 +1722,21 @@ function initMusicPlayer() {
   }
 
   function setTransportArt(t) {
-    if (!t.artwork) { artEl.innerHTML = MUSIC_NOTE_ICON; return; }
-    artEl.innerHTML = '<img alt="" loading="lazy" decoding="async" />';
+    artEl.innerHTML = '<img alt="" decoding="async" />';
     const img = artEl.querySelector('img');
     img.addEventListener('error', () => { artEl.innerHTML = MUSIC_NOTE_ICON; }, { once: true });
     img.src = t.artwork;
   }
 
   function loadTrack(i, opts = {}) {
+    if (heard.has(index)) savedPos.set(index, audio.currentTime || 0);
+    cancelFade();
     const t = tracks[i];
     index = i;
     audio.src = t.src;
-    audio.currentTime = 0;
     titleEl.textContent = t.title;
-    genreEl.textContent = t.genre || '';
-    genreEl.style.display = t.genre ? '' : 'none';
     setTransportArt(t);
+    if (savedPos.has(i)) seekWhenReady(savedPos.get(i));
     updateUI();
     setTrackStates();
     if (opts.autoplay) play(); else updatePlayBtn();
@@ -1525,7 +1746,20 @@ function initMusicPlayer() {
     // Only one thing plays at a time, site-wide.
     if (activeId) stopPlayer(activeId);
     pauseAllVideos();
-    audio.play().catch(() => {});
+
+    const firstPlay = !heard.has(index);
+    cancelFade();
+    if (firstPlay) {
+      if (!userPlaced.has(index)) seekWhenReady(tracks[index].previewStart || 0);
+      if (volumeWorks) { audio.volume = 0; pendingFade = true; }
+    }
+
+    const attempt = ++playAttempt;
+    audio.play().catch(err => {
+      // A newer play()/src change aborts older attempts — ignore those.
+      if (attempt !== playAttempt || (err && err.name === 'AbortError')) return;
+      pause();
+    });
     playing = true;
     updatePlayBtn();
     setTrackStates();
@@ -1533,7 +1767,9 @@ function initMusicPlayer() {
   }
 
   function pause() {
+    playAttempt++;
     audio.pause();
+    cancelFade();                    // resumes later at full volume, no re-fade
     playing = false;
     if (raf) { cancelAnimationFrame(raf); raf = null; }
     updatePlayBtn();
@@ -1560,18 +1796,17 @@ function initMusicPlayer() {
     elapsedEl.textContent = fmt(cur);
     durationEl.textContent = fmt(dur);
   }
+  // Keep the (paused) transport accurate as metadata arrives or seeks land.
+  audio.addEventListener('loadedmetadata', updateUI);
+  audio.addEventListener('seeked', updateUI);
 
   playBtn.addEventListener('click', () => { playing ? pause() : play(); });
 
   cardBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const i = Number(btn.dataset.index);
-      // Same cover again: just toggle play/pause of what's already loaded.
       if (i === index) { playing ? pause() : play(); return; }
-      // A different cover: select it. Keep playing only if we already were —
-      // otherwise it's selected but stays paused.
-      const wasPlaying = playing;
-      loadTrack(i, { autoplay: wasPlaying });
+      loadTrack(i, { autoplay: playing });
     });
   });
 
@@ -1588,6 +1823,8 @@ function initMusicPlayer() {
     const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     if (audio.duration) {
       audio.currentTime = pct * audio.duration;
+      // A deliberate seek before a track's first play wins over previewStart.
+      if (!heard.has(index) && !playing) userPlaced.add(index);
       updateUI();
     }
   };
@@ -1598,20 +1835,19 @@ function initMusicPlayer() {
   window.addEventListener('mouseup', () => { scrubbing = false; });
   window.addEventListener('touchend', () => { scrubbing = false; });
 
-  /* ─── Cover rail: browsing is separate from selecting ───
-     The prev/next buttons and native horizontal scroll/swipe just move
-     the viewport — they never change which track is selected or playing.
-     Clicking a cover is the only thing that selects a track. */
+  /* ─── Cover rail: browsing is separate from selecting ─── */
   function railStep() {
     const item = rail.querySelector('.mp-rail-item');
     const gap = 18;
-    const width = item ? item.getBoundingClientRect().width : 168;
-    return (width + gap) * 2; // advance roughly two covers at a time
+    const width = item ? item.getBoundingClientRect().width : 160;
+    return (width + gap) * 2;
   }
   function updateNavState() {
-    const max = rail.scrollWidth - rail.clientWidth - 1;
-    prevBtn.disabled = rail.scrollLeft <= 0;
+    const max = rail.scrollWidth - rail.clientWidth - 2;
+    prevBtn.disabled = rail.scrollLeft <= 2;
     nextBtn.disabled = rail.scrollLeft >= max;
+    rail.classList.toggle('at-start', prevBtn.disabled);
+    rail.classList.toggle('at-end', nextBtn.disabled);
   }
   function updateRailScrollability() {
     const scrollable = rail.scrollWidth > rail.clientWidth + 4;
@@ -1626,7 +1862,60 @@ function initMusicPlayer() {
   window.addEventListener('resize', updateRailScrollability);
   updateRailScrollability();
 
-  loadTrack(0);   // select the first cover without playing it
+  loadTrack(0);   // select the first cover (Broken Harmony) without playing it
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CLIENT PORTAL PREVIEW VIDEO
+   Silent, looping, decorative. Deliberately NOT class "v-local", so
+   it never takes part in the media-exclusivity logic above (it has
+   no audio track and can't interrupt or be interrupted by anything).
+   - Reduced motion: never loads; the poster image is shown instead.
+   - Only plays while the portal is on screen.
+   - Dips to the poster for the loop jump, which starts at the same
+     homepage view, so the restart reads as a soft fade.
+   ═══════════════════════════════════════════════════════════════ */
+
+function initPortalPreview() {
+  const video = document.querySelector('.portal-video');
+  if (!video) return;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let onScreen = true;
+  let loaded = false;
+
+  video.muted = true;               // set as properties too; some browsers only honour these
+  video.defaultMuted = true;
+
+  const tryPlay = () => {
+    if (reduce.matches || !onScreen) return;
+    if (!loaded) { video.src = video.dataset.src; loaded = true; }
+    video.play().catch(() => {});   // autoplay refused → poster simply stays
+  };
+  const stop = () => { if (!video.paused) video.pause(); };
+
+  video.addEventListener('playing', () => video.classList.add('is-playing'));
+  video.addEventListener('error', () => video.classList.remove('is-playing'));
+  video.addEventListener('timeupdate', () => {
+    const d = video.duration;
+    if (!d) return;
+    const t = video.currentTime;
+    video.classList.toggle('is-looping', t > d - 0.6 || t < 0.25);
+  });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(entries => {
+      onScreen = entries[0].isIntersecting;
+      onScreen ? tryPlay() : stop();
+    }, { threshold: 0.15 }).observe(video.closest('.portal'));
+  }
+
+  const onMotionPref = () => { if (reduce.matches) { stop(); video.classList.remove('is-playing'); } else tryPlay(); };
+  if (reduce.addEventListener) reduce.addEventListener('change', onMotionPref);
+  else if (reduce.addListener) reduce.addListener(onMotionPref);
+
+  // Start after the page has painted so the video never delays first render.
+  if (document.readyState === 'complete') tryPlay();
+  else window.addEventListener('load', tryPlay, { once: true });
 }
 
 /* ─── INIT ─── */
