@@ -344,6 +344,51 @@ body {
   animation: fadeUp 0.7s ease both;
 }
 .card:hover { background: var(--hover); }
+
+/* Two-up A/B grid on wider screens: same cards, same players, half the
+   scroll. Cards in a row share a height so the grid reads as one block. */
+@media (min-width: 701px) {
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .cards .card {
+    margin-bottom: 0;
+    padding: 24px 22px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .cards .card-title { font-size: 18px; }
+  .cards .card-listen { margin-bottom: 16px; }
+  .cards .player { padding: 14px 14px 10px; margin-bottom: 16px; }
+  .cards .card-link { margin-top: auto; padding-top: 10px; align-self: flex-start; }
+  /* Odd count: the last card sits centred under the pair above it. */
+  .cards .card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 8px);
+  }
+}
+
+/* A/B player layout: play + Before/After on the first line, progress bar
+   with the timer beside it on the second. Pure positioning — the same
+   elements, ids and handlers as before. */
+.player {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "play ab ab"
+    "scrub scrub time";
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+.player .player-controls { display: contents; }
+.player .btn-play   { grid-area: play; }
+.player .ab-toggle  { grid-area: ab; justify-self: start; }
+.player .player-time { grid-area: time; margin-left: 0; }
+.player .scrub-wrap { grid-area: scrub; min-width: 0; }
 .card-header {
   display: flex;
   align-items: flex-start;
@@ -1031,24 +1076,21 @@ const MUSIC_TRACKS = [
 
 const VIDEO_SECTION_TITLE = "Commercial & Video Work";
 
-// Featured slot (large, top). File names are unchanged from before the
-// swap, so commercial-02 is featured and commercial-featured sits
-// bottom-right.
-const VIDEO_FEATURED = {
-  type: "local",
-  src: "assets/commercial-02.mp4",
-  // Custom cover supplied by Tom. The .jpg is a 4:3 crop of the original
-  // screenshot (assets/featured-commercial-poster.png) matching the video
-  // frame exactly, so it fills the slot with no bars under object-fit: contain.
-  poster: "assets/featured-commercial-poster.jpg",
-  // Brand confirmed by Tom.
-  title: "Cadence",
-  role: "Production, Mix & Master",
-  ratio: "4x3"
-};
-
-// Supporting row: [bottom-left, bottom-right].
-const VIDEO_SUPPORTING = [
+// Large, full-width slots: Tom's own productions (production, mix &
+// master), stacked one above the other at the same size.
+const VIDEO_PRODUCTION = [
+  {
+    type: "local",
+    src: "assets/commercial-02.mp4",
+    // Custom cover supplied by Tom. The .jpg is a 4:3 crop of the original
+    // screenshot (assets/featured-commercial-poster.png) matching the video
+    // frame exactly, so it fills the slot with no bars under object-fit: contain.
+    poster: "assets/featured-commercial-poster.jpg",
+    // Brand confirmed by Tom.
+    title: "Cadence",
+    role: "Production, Mix & Master",
+    ratio: "4x3"
+  },
   {
     type: "local",
     src: "assets/commercial-01.mp4",
@@ -1057,11 +1099,25 @@ const VIDEO_SUPPORTING = [
     title: "Cadence",
     role: "Production, Mix & Master",
     ratio: "4x3"
-  },
+  }
+];
+
+// Smaller two-up row: mix & master only (someone else's production).
+const VIDEO_SUPPORTING = [
   {
     type: "local",
     src: "assets/commercial-featured.mp4",
     poster: "assets/commercial-featured-poster.jpg",
+    // Brand confirmed from the closing title card in the film itself.
+    title: "Cadence",
+    role: "Mix & Master",
+    ratio: "4x3"
+  },
+  {
+    type: "local",
+    src: "assets/commercial-03.mp4",
+    // Cover is the clock shot at 0:01, chosen by Tom.
+    poster: "assets/commercial-03-poster.jpg",
     // Brand confirmed from the closing title card in the film itself.
     title: "Cadence",
     role: "Mix & Master",
@@ -1349,9 +1405,9 @@ function buildVideoSection() {
   return `
     <section class="work" id="commercial-work">
       <h2 class="work-title">${VIDEO_SECTION_TITLE}</h2>
-      ${videoCard(VIDEO_FEATURED, 0)}
+      ${VIDEO_PRODUCTION.map((v, i) => videoCard(v, i)).join('')}
       <div class="vgrid">
-        ${VIDEO_SUPPORTING.map((v, i) => videoCard(v, i + 1)).join('')}
+        ${VIDEO_SUPPORTING.map((v, i) => videoCard(v, i + VIDEO_PRODUCTION.length)).join('')}
       </div>
     </section>`;
 }
