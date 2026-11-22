@@ -987,16 +987,29 @@ body {
 @media (min-width: 960px) {
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
-    gap: 56px;
+    grid-template-columns: minmax(430px, 0.9fr) minmax(0, 1.6fr);
+    gap: 44px;
     align-items: center;
     padding-top: 64px;
   }
   .hero-identity { margin-bottom: 22px; }
-  .hero-links { margin-top: 0; }
+  .hero-name { white-space: nowrap; }
+  .hero-links { margin-top: 0; gap: 14px; }
+  .hero-links-side { gap: 14px; }
+  .portal-url { top: 16px; left: 16px; font-size: 12px; padding: 5px 12px 5px 10px; }
+  .portal-body { left: 28px; right: 28px; bottom: 26px; gap: 7px; }
+  .portal-eyebrow { font-size: 12px; }
+  .portal-title { font-size: 30px; }
+  .portal-cta { font-size: 15px; }
+  .social-card-mark { width: 48px; }
+  .social-card-label { left: 16px; bottom: 14px; font-size: 13px; }
+
+  /* Centre the cover row so the space is even on both sides */
+  :root { --cover-size: 180px; }
+  .mp-rail-item:first-child { margin-left: auto; }
+  .mp-rail-item:last-child { margin-right: auto; }
 
   .music, .work { margin-top: 48px; }
-  :root { --cover-size: 140px; }
 
   .work {
     display: grid;
@@ -1020,6 +1033,11 @@ body {
   .ab-intro .subhead { grid-column: 2; max-width: none; }
   .ab-intro .tools { grid-column: 2; }
   .cards { padding-top: 32px; }
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+  .hero { display: block; }
+  .hero-links { margin-top: 30px; }
 }
 
 @media (min-width: 1100px) {
@@ -1552,7 +1570,6 @@ function buildPage() {
           <span class="card-tag">${item.category}</span>
         </div>
         ${item.nda ? '<span class="card-nda">Project under NDA — client name withheld</span>' : ''}
-        <p class="card-listen">${item.listenFor}</p>
         <div class="player" id="${id}">
           <div class="player-controls">
             <button class="btn-play" data-id="${id}" aria-label="Play">
@@ -1570,9 +1587,6 @@ function buildPage() {
           <audio preload="metadata" data-id="${id}" data-ab="a" src="${item.beforeUrl}"></audio>
           <audio preload="metadata" data-id="${id}" data-ab="b" src="${item.afterUrl}"></audio>
         </div>
-        <ul class="card-bullets">
-          ${item.bullets.map(b => `<li>${b}</li>`).join('')}
-        </ul>
         ${item.link ? `<a class="card-link" href="${item.link.url}" target="_blank" rel="noopener">${item.link.label}</a>` : ''}
       </article>`;
   });
